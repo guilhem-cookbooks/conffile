@@ -17,8 +17,16 @@
 # limitations under the License.
 #
 
-include_recipe "gem_specific_install"
-chef_gem "inifile" do
-  provider Chef::Provider::Package::Rubygems::SpecificInstall
-  options( :repo => "https://github.com/optiflows/inifile.git")
+include_recipe "conffile"
+
+conffile_ini "test creation" do
+  path "#{Chef::Config[:file_cache_path]}/test.conf"
+  parameters( "global" => {"parameter1" => "value1"})
+  action :install
+end
+
+conffile_ini "test add" do
+  path "#{Chef::Config[:file_cache_path]}/test.conf"
+  parameters( "global" => {"parameter2" => "value2"})
+  action :configure
 end
