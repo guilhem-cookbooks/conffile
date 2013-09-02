@@ -73,6 +73,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision :chef_solo do |chef|
     chef.json = {
     }
+    #chef.log_level = :debug
 
     chef.run_list = [
         "recipe[conffile::default]",
