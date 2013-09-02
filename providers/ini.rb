@@ -40,16 +40,16 @@ def load_current_resource
 end
 
 def ini_equal?(path, parameters)
-  if ::File.exits(path)
-    current_ini = IniFile.new(path)
+  if ::File.exists?(path)
+    current_ini = IniFile.new(:filename => path)
     return true if current_ini.to_h == parameters
   end
   return false
 end
 
 def ini_include?(path,parameters)
-  if ::File.exits(path)
-    current_ini = IniFile.new(path)
+  if ::File.exists?(path)
+    current_ini = IniFile.new(:filename => path)
     return true if current_ini.to_h.merge(parameters) == current_ini
   end
   return false
