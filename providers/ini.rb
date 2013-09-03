@@ -3,7 +3,7 @@ use_inline_resources
 action :configure do
   ruby_block "Configure #{current_resource.name}" do
     block do
-      IniFile.new( :filename => current_resource.path).merge(current_resource.parameters).write
+      IniFile.new( init_hash ).merge(new_resource.parameters).write
     end
     not_if { current_resource.configured }
   end
@@ -12,7 +12,7 @@ end
 action :install do
   ruby_block "Install #{current_resource.name}" do
     block do
-      IniFile.new( :filename => current_resource.path, :content => current_resource.parameters).write
+      IniFile.new( init_hash.merge( :content => new_resource.parameters) ).write
     end
     not_if { current_resource.installed }
   end
@@ -29,27 +29,33 @@ def load_current_resource
 
   @current_resource = Chef::Resource::ConffileIni.new(@new_resource.name)
   @current_resource.name(@new_resource.name)
-  @current_resource.path(@new_resource.path)
   @current_resource.parameters(@new_resource.parameters)
-  if ini_equal?(@current_resource.path,@current_resource.parameters)
+  if ini_equal?(@current_resource.parameters)
     @current_resource.installed = true
     @current_resource.configured = true
-  elsif ini_include?(@current_resource.path,@current_resource.parameters)
+  elsif ini_include?(@current_resource.parameters)
     @current_resource.configured = true
   end
 end
 
-def ini_equal?(path, parameters)
-  if ::File.exists?(path)
-    current_ini = IniFile.new(:filename => path)
+def init_hash
+  init = { :filename => new_resource.path }
+  init.merge( :comment => new_resource.comment) if new_resource.comment
+  init.merge( :param => new_resource.separator) if new_resource.separator
+  return init
+end
+
+def ini_equal?(parameters)
+  if ::File.exists?(new_resource.path)
+    current_ini = IniFile.new(init_hash)
     return true if current_ini.to_h == parameters
   end
   return false
 end
 
-def ini_include?(path,parameters)
-  if ::File.exists?(path)
-    current_ini = IniFile.new(:filename => path)
+def ini_include?(parameters)
+  if ::File.exists?(new_resource.path)
+    current_ini = IniFile.new(init_hash)
     return true if current_ini.to_h.merge(parameters) == current_ini
   end
   return false
