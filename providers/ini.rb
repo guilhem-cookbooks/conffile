@@ -1,6 +1,10 @@
 use_inline_resources
 
+include Chef::DSL::IncludeRecipe
+
 action :configure do
+  include_recipe "conffile"
+
   ruby_block "Configure #{current_resource.name}" do
     block do
       IniFile.new( init_hash ).merge(new_resource.parameters).write
@@ -10,6 +14,7 @@ action :configure do
 end
 
 action :install do
+  include_recipe "conffile"
   ruby_block "Install #{current_resource.name}" do
     block do
       IniFile.new( init_hash.merge( :content => new_resource.parameters) ).write
