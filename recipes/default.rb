@@ -25,4 +25,5 @@ include_recipe "gem_specific_install"
 
 gem_specific_install "inifile" do
   repository "https://github.com/optiflows/inifile.git"
-end.run_action_now
+  action :install
+end
