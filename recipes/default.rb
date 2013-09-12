@@ -23,7 +23,7 @@ include_recipe "gem_specific_install"
 #  options( :repo => "https://github.com/optiflows/inifile.git")
 #end
 
-gem_specific_install "inifile" do
-  repository "https://github.com/optiflows/inifile.git"
+gem_specific_install "ini-phile" do
+  repository "https://github.com/guilhem/ini-phile.git"
   action :install
 end

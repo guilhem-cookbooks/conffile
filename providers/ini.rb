@@ -7,7 +7,7 @@ action :configure do
 
   ruby_block "Configure #{current_resource.name}" do
     block do
-      IniFile.new( init_hash ).merge(new_resource.parameters).write
+      Ini.new( init_hash ).merge(new_resource.parameters).write
     end
     not_if { current_resource.configured }
   end
@@ -17,7 +17,7 @@ action :install do
   include_recipe "conffile"
   ruby_block "Install #{current_resource.name}" do
     block do
-      IniFile.new( init_hash.merge( :content => new_resource.parameters) ).write
+      Ini.new( init_hash.merge( :content => new_resource.parameters) ).write
     end
     not_if { current_resource.installed }
   end
@@ -30,7 +30,7 @@ action :remove do
 end
 
 def load_current_resource
-  require 'inifile'
+  require 'ini-phile'
 
   @current_resource = Chef::Resource::ConffileIni.new(@new_resource.name)
   @current_resource.name(@new_resource.name)
@@ -52,7 +52,7 @@ end
 
 def ini_equal?(parameters)
   if ::File.exists?(new_resource.path)
-    current_ini = IniFile.new(init_hash)
+    current_ini = Ini.new(init_hash)
     return true if current_ini.to_h == parameters
   end
   return false
@@ -60,7 +60,7 @@ end
 
 def ini_include?(parameters)
   if ::File.exists?(new_resource.path)
-    current_ini = IniFile.new(init_hash)
+    current_ini = Ini.new(init_hash)
     return true if current_ini.to_h.merge(parameters) == current_ini
   end
   return false
