@@ -45,8 +45,8 @@ end
 
 def init_hash
   init = { :filename => new_resource.path }
-  init.merge( :comment => new_resource.comment) if new_resource.comment
-  init.merge( :param => new_resource.separator) if new_resource.separator
+  init.merge!( :comment => new_resource.comment) if new_resource.comment
+  init.merge!( :param => new_resource.separator) if new_resource.separator
   return init
 end
 
