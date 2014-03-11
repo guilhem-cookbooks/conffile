@@ -7,11 +7,8 @@ group :lint do
   gem 'rubocop', '~> 0.18'
 end
 
-group :kitchen_common do
+group :integration do
   gem 'test-kitchen', '~> 1.2'
-end
-
-group :kitchen_vagrant do
   gem 'kitchen-vagrant', '~> 0.11'
 end
 
