@@ -11,6 +11,7 @@ action :configure do
     end
     not_if { current_resource.configured }
   end
+  file_rights
 end
 
 action :install do
@@ -21,12 +22,7 @@ action :install do
     end
     not_if { current_resource.installed }
   end
-end
-
-action :remove do
-  file current_resource.path do
-    action :delete
-  end
+  file_rights
 end
 
 def load_current_resource
@@ -40,6 +36,14 @@ def load_current_resource
     @current_resource.configured = true
   elsif ini_include?(@current_resource.parameters)
     @current_resource.configured = true
+  end
+end
+
+def file_rights
+  file current_resource.path do
+    owner new_resource.owner
+    group new_resource.group
+    mode new_resource.mode
   end
 end
 
