@@ -26,6 +26,8 @@ action :install do
 end
 
 def load_current_resource
+  include_recipe 'conffile'
+
   require 'ini-phile'
 
   @current_resource = Chef::Resource::ConffileIni.new(@new_resource.name)
