@@ -3,28 +3,11 @@ use_inline_resources
 include Chef::DSL::IncludeRecipe
 
 action :configure do
-  include_recipe 'conffile'
-
-  ruby_block "Configure #{current_resource.name}" do
-    block do
-      IniFile.new(init_params).merge(new_resource.parameters).write
-    end
-    not_if { current_resource.configured }
-  end
-  file_rights
+  configure
 end
 
 action :install do
-  include_recipe 'conffile'
-  ruby_block "Install #{current_resource.name}" do
-    block do
-      ini = IniFile.new(ini_params)
-      ini.merge!(new_resource.parameters)
-      ini.write(write_params)
-    end
-    not_if { current_resource.installed }
-  end
-  file_rights
+  install
 end
 
 def load_current_resource
@@ -41,6 +24,31 @@ def load_current_resource
   elsif ini_include?(@current_resource.parameters)
     @current_resource.configured = true
   end
+end
+
+def install
+  include_recipe 'conffile'
+  ruby_block "Install #{current_resource.name}" do
+    block do
+      ini = IniFile.new(ini_params)
+      ini.merge!(new_resource.parameters)
+      ini.write(write_params)
+    end
+    not_if { current_resource.installed }
+  end
+  file_rights
+end
+
+def configure
+  include_recipe 'conffile'
+
+  ruby_block "Configure #{current_resource.name}" do
+    block do
+      IniFile.new(init_params).merge(new_resource.parameters).write
+    end
+    not_if { current_resource.configured }
+  end
+  file_rights
 end
 
 def file_rights
@@ -68,7 +76,7 @@ end
 
 def ini_equal?(parameters)
   if ::File.exists?(new_resource.path)
-    current_ini = Ini.new(init_hash)
+    current_ini = IniFile.new(init_params)
     return true if current_ini.to_h == parameters
   end
   false
@@ -76,7 +84,7 @@ end
 
 def ini_include?(parameters)
   if ::File.exists?(new_resource.path)
-    current_ini = Ini.new(init_hash)
+    current_ini = IniFile.new(init_params)
     return true if current_ini.to_h.merge(parameters) == current_ini
   end
   false

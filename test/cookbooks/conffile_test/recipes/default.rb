@@ -28,3 +28,10 @@ conffile_ini file do
   )
   action :install
 end
+
+conffile_ini 'without section' do
+  path ::File.join(Chef::Config[:file_cache_path], 'no_section')
+  parameters(
+    'key3' => 'value3'
+  )
+end
