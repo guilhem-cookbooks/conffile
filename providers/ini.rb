@@ -7,7 +7,7 @@ action :configure do
 
   ruby_block "Configure #{current_resource.name}" do
     block do
-      Ini.new(init_hash).merge(new_resource.parameters).write
+      IniFile.new(init_params).merge(new_resource.parameters).write
     end
     not_if { current_resource.configured }
   end
@@ -18,7 +18,9 @@ action :install do
   include_recipe 'conffile'
   ruby_block "Install #{current_resource.name}" do
     block do
-      Ini.new(init_hash.merge(:content => new_resource.parameters)).write
+      ini = IniFile.new(ini_params)
+      ini.merge!(new_resource.parameters)
+      ini.write(write_params)
     end
     not_if { current_resource.installed }
   end
@@ -28,7 +30,7 @@ end
 def load_current_resource
   include_recipe 'conffile'
 
-  require 'ini-phile'
+  require 'inifile'
 
   @current_resource = Chef::Resource::ConffileIni.new(@new_resource.name)
   @current_resource.name(@new_resource.name)
@@ -49,11 +51,19 @@ def file_rights
   end
 end
 
-def init_hash
-  init = { :filename => new_resource.path }
-  init.merge!(:comment => new_resource.comment) if new_resource.comment
-  init.merge!(:param => new_resource.separator) if new_resource.separator
-  init
+def ini_params
+  hash = {}
+  hash.merge!(:comment => new_resource.comment) if new_resource.comment
+  hash.merge!(:param => new_resource.separator) if new_resource.separator
+  hash
+end
+
+def write_params
+  { :filename => new_resource.path }
+end
+
+def init_params
+  write_params.merge(ini_params)
 end
 
 def ini_equal?(parameters)
