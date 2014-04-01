@@ -19,7 +19,6 @@
 
 include_recipe 'gem_specific_install'
 
-chef_gem 'inifile' do
-  provider Chef::Provider::Package::Rubygems::SpecificInstall
-  options(:repo => 'https://github.com/optiflows/inifile.git')
+gem_specific_install 'inifile' do
+  repository 'https://github.com/optiflows/inifile.git'
 end
