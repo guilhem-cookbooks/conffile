@@ -1,14 +1,48 @@
-[![Build Status](https://travis-ci.org/optiflows-cookbooks/conffile.png)](https://travis-ci.org/optiflows-cookbooks/conffile)
-# conffile cookbook
+# Description
+
+Installs/Configures conffile
 
 # Requirements
 
-# Usage
+## Platform:
+
+*No platforms defined*
+
+## Cookbooks:
+
+* gem_specific_install (~> 0.2.0)
 
 # Attributes
 
+*No attributes defined*
+
 # Recipes
 
-# Author
+* conffile::default
 
-Author:: Guilhem Lettron (<guilhem.lettron@optiflows.com>)
+# Resources
+
+* [conffile_ini](#conffile_ini)
+
+## conffile_ini
+
+### Actions
+
+- configure:  Default action.
+- install:
+
+### Attribute Parameters
+
+- path:
+- parameters:
+- separator:
+- comment:
+- owner:
+- group:
+- mode:
+
+# License and Maintainer
+
+Maintainer:: Guilhem Lettron (<guilhem.lettron@optiflows.com>)
+
+License:: Apache 2.0
