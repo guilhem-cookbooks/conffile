@@ -1,2 +1,2 @@
-name             'conffile_test'
-version          '0.1.0'
+name 'conffile_test'
+version '0.1.0'

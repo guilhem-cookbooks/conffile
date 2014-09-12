@@ -75,7 +75,7 @@ def init_params
 end
 
 def ini_equal?(parameters)
-  if ::File.exists?(new_resource.path)
+  if ::File.exist?(new_resource.path)
     current_ini = IniFile.new(init_params)
     return true if current_ini.to_h == parameters
   end
@@ -83,7 +83,7 @@ def ini_equal?(parameters)
 end
 
 def ini_include?(parameters)
-  if ::File.exists?(new_resource.path)
+  if ::File.exist?(new_resource.path)
     current_ini = IniFile.new(init_params)
     return true if current_ini.to_h.merge(parameters) == current_ini
   end
